@@ -12,12 +12,19 @@ const app = Vue.createApp({
     },
     methods: {
         handleLogin() {
-            axios.post("http://localhost:8080/login", {
-                username: this.username,
-                password: this.password
-            }, {
-                withCredentials: true
-            })
+            axios.post(
+                "http://localhost:8080/login",
+                new URLSearchParams({
+                    username: this.username,
+                    password: this.password
+                }),
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                }
+            )
                 .then(response => {
                     console.log(response);
                     this.successMsg = "登入成功！";
@@ -32,7 +39,6 @@ const app = Vue.createApp({
                 });
         },
         fetchVoteSummary() {
-            debugger;
             axios.get('http://localhost:8080/votes/summary', {
                 withCredentials: true
             })
@@ -44,8 +50,20 @@ const app = Vue.createApp({
                     console.log("error");
                     this.error = '取得資料失敗: ' + err.message;
                 });
-            debugger;
-        }
+        },
+        chcekLogin() {
+            axios.get('http://localhost:8080/checkLogin', {
+                withCredentials: true
+            })
+                .then(response => {
+                    console.log("response", response.data);
+                    alert(response.data);
+                })
+                .catch(err => {
+                    console.log("error");
+                });
+        },
+
     }
 });
 app.mount("#app");
