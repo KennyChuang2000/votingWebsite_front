@@ -1,30 +1,14 @@
-const voteRsult = Vue.createApp({
-    data() {
-        return {
-            voteSummary: [],
-            error: null,
-        };
-    },
-    mounted() {
-        axios.get('http://localhost:8080/votes/summary')
-            .then(response => {
-                this.voteSummary = response.data;
-            })
-            .catch(err => {
-                this.error = '取得資料失敗: ' + err.message;
-            });
-    },
-});
-voteRsult.mount("#voteRsult");
-
-const login = Vue.createApp({
+const app = Vue.createApp({
     data() {
         return {
             username: "",
             password: "",
             errorMsg: "",
-            successMsg: ""
-        }
+            successMsg: "",
+            voteSummary: [],
+            error: null,
+            isLoggedIn: false
+        };
     },
     methods: {
         handleLogin() {
@@ -32,23 +16,36 @@ const login = Vue.createApp({
                 username: this.username,
                 password: this.password
             }, {
-                withCredentials: true // 要帶上 cookie（session id）
+                withCredentials: true
             })
                 .then(response => {
+                    console.log(response);
                     this.successMsg = "登入成功！";
                     this.errorMsg = "";
-                    console.log("登入成功:", response);
+                    this.isLoggedIn = true;
+                    this.fetchVoteSummary(); // 登入成功後拉資料
                 })
                 .catch(error => {
                     this.errorMsg = "登入失敗：" + (error.response?.status || error.message);
                     this.successMsg = "";
-                    console.error("登入錯誤:", error);
+                    this.isLoggedIn = false;
                 });
+        },
+        fetchVoteSummary() {
+            debugger;
+            axios.get('http://localhost:8080/votes/summary', {
+                withCredentials: true
+            })
+                .then(response => {
+                    console.log("response", response.data);
+                    this.voteSummary = response.data;
+                })
+                .catch(err => {
+                    console.log("error");
+                    this.error = '取得資料失敗: ' + err.message;
+                });
+            debugger;
         }
     }
 });
-login.mount("#login");
-
-
-
-
+app.mount("#app");

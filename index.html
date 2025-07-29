@@ -4,41 +4,61 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
     <script src="lib/vue.global.js"></script>
   </head>
   <body>
-    <div id="login">
-      <form @submit.prevent="handleLogin">
-        <label>帳號：</label>
-        <input type="text" v-model="username" required /><br />
-
-        <label>密碼：</label>
-        <input type="password" v-model="password" required /><br />
-
-        <button type="submit">登入</button>
+    <div id="app" class="container mt-5" style="max-width: 600px">
+      <!-- 登入區 -->
+      <form
+        @submit.prevent="handleLogin"
+        v-if="!isLoggedIn"
+        class="card p-4 shadow-sm"
+      >
+        <div class="mb-3">
+          <label class="form-label">帳號：</label>
+          <input type="text" v-model="username" required class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">密碼：</label>
+          <input
+            type="password"
+            v-model="password"
+            required
+            class="form-control"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">登入</button>
       </form>
 
-      <p v-if="errorMsg" style="color: red">{{ errorMsg }}</p>
-      <p v-if="successMsg" style="color: green">{{ successMsg }}</p>
+      <p v-if="errorMsg" class="text-danger mt-3">{{ errorMsg }}</p>
+      <p v-if="successMsg" class="text-success mt-3">{{ successMsg }}</p>
+
+      <!-- 投票統計區 -->
+      <div v-if="isLoggedIn" class="card p-4 shadow-sm">
+        <h2 class="mb-4">投票統計結果</h2>
+        <table class="table table-striped table-bordered">
+          <thead class="table-primary">
+            <tr>
+              <th>投票項目</th>
+              <th>票數</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in voteSummary" :key="item.id">
+              <td>{{ item.title }}</td>
+              <td>{{ item.voteCount }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p v-if="error" class="text-danger">{{ error }}</p>
+      </div>
     </div>
 
-    <div id="voteRsult">
-      <h2>投票統計結果</h2>
-      <table>
-        <tr>
-          <th>投票項目</th>
-          <th>票數</th>
-        </tr>
-        <tbody>
-          <tr v-for="item in voteSummary" :key="item.id">
-            <td>{{ item.title }}</td>
-            <td>{{ item.voteCount }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p v-if="error" style="color: red">{{ error }}</p>
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="index.js"></script>
   </body>
