@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="lib/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="login">
+      <form @submit.prevent="handleLogin">
+        <label>帳號：</label>
+        <input type="text" v-model="username" required /><br />
+
+        <label>密碼：</label>
+        <input type="password" v-model="password" required /><br />
+
+        <button type="submit">登入</button>
+      </form>
+
+      <p v-if="errorMsg" style="color: red">{{ errorMsg }}</p>
+      <p v-if="successMsg" style="color: green">{{ successMsg }}</p>
+    </div>
+
+    <div id="voteRsult">
+      <h2>投票統計結果</h2>
+      <table>
+        <tr>
+          <th>投票項目</th>
+          <th>票數</th>
+        </tr>
+        <tbody>
+          <tr v-for="item in voteSummary" :key="item.id">
+            <td>{{ item.title }}</td>
+            <td>{{ item.voteCount }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-if="error" style="color: red">{{ error }}</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
